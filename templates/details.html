@@ -1,0 +1,57 @@
+{% extends 'base.html' %} 
+{% block title %} Chart {% endblock title %} 
+{% block content %}
+
+<div class="container">
+  <div class="row py-4">
+    <div class="col-md-12">
+      <h4 class="text-center">Charts of {{country.name}}</h4>
+    </div>
+    <div class="col-md-12">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+</div>
+
+{{qs|json_script:"qs"}}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const qs=JSON.parse(document.getElementById('qs').textContent);
+for(let d of qs) {
+    console.log(d);
+}
+
+let labels = [];
+let data = [];
+
+for(let d of qs) {
+    labels.push(d[0].toString());
+    data.push(d[1]);
+}
+
+const ctx = document.getElementById("myChart").getContext('2d');
+
+const myChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+        labels: labels,
+        datasets: [
+        {
+            label: "# of Votes",
+            data: data,
+            borderWidth: 1,
+        },
+        ],
+},
+options: {
+    scales: {
+    y: {
+        beginAtZero: true,
+    },
+    },
+},
+});
+</script>
+{% endblock content %} 
